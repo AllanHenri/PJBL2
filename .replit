@@ -1,7 +1,6 @@
 run = "./main"
 hidden = ["main", "main-debug", "**/*.o", "**/*.d", ".ccls-cache", "Makefile"]
 compile = "make -s"
-entrypoint = "main.c"
 
 [nix]
 channel = "stable-22_11"
