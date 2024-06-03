@@ -9,53 +9,67 @@ e colocados (durante a leitura do arquivo) na matriz alocada dinamicamente */
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Encerra o programa na falha de alocação de memória. */
-void encerra(){
-  printf("Memoria insuficiente!");
+/* Função que carrega o arquivo com os dados da platéia. Se o arquivo ainda não existir, o cria e o inicializa com todas as poltronas vazias ('-'). */
+void falha_criacao(){
+  printf("Falha na criacao do arquivo de plateia!");
   exit(1);
 }
 
-/* Aloca memória para matriz de inteiros 12 x 10.*/
-int** imat_alloc(){
-  int i, j;
-  /* Aloca memória para início de cada linha. */
-  int **pm = (int**)malloc(12 * sizeof(int*));
-  if (pm == NULL) encerra();
-  for(i = 0 ; i < 12 ; i++){
+int** inicializa_plateia(){ // Aloca dinamicamente a matriz, e retorna o ponteiro para ela
+  int m = 12, n = 10, i, j;
+  int **Pplateia = (int**)malloc(m*sizeof(int*));
+
+  if (Pplateia == NULL) falha_criacao();
+
+  for(i = 0 ; i < m ; i++){
     /* Aloca memória para os elementos de uma linha. */
-    pm[i] = (int*)malloc(10 * sizeof(int));
-    if (pm[i] == NULL) encerra();
-    /* Inicializa os elementos com '-' */
-      for(j = 0 ; j < 10 ; j ++) pm[i][j] = '-';
+    Pplateia[i] = (int*)malloc(n*sizeof(int));
+    if (Pplateia[i] == NULL) falha_criacao();
+
+    /* Inicializa os elementos com - */
+    for(j = 0 ; j < n ; j++) Pplateia[i][j]='-';
     }
+
   /* Retorna ponteiro para a matriz. */
-  return pm;
+  return Pplateia;
 }
 
-/* Libera memória alocada */
-void imat_free(int **pmat){
-int i;
-for(i = 0 ; i < 12 ; i++)
-free(pmat[i]); /* Libera memória alocada para a linha i. */
-free(pmat); /* Libera memória do vetor inicial com os ponteiros para as linhas. */
-}
+void carregaPlateia(char nomeArq[], char **p){
+ /* nomeArq: arquivo onde a plateia será salvo */
+ /* p: ponteiro para a matriz da plateia. */
+  int i,j;
+  int m = 12, n = 10;
+  FILE *fp; /* Ponteiro para o arquivo de plateia. */
+  if ((fp=fopen(nomeArq,"r"))==NULL) { /* Tenta abrir. */
+  /* Se não encontrou o arquivo, ele é criado com a opção "w+". */
+    if ((fp=fopen(nomeArq,"w+"))==NULL) /* Verifica criação. */ falha_criacao();
 
-int main(){
-  int i;
-  FILE *fpin; /* ponteiro para arquivo de entrada e saida de dados */
-  char arquivo[]="plateia.txt"; /* Arquivo de entrada de dados. */
-  
-  
-  while (i == 0){ /* Abre o arquivo */
-    if ((fpin=fopen(arquivo,"r")) == NULL){ /* Verifica sucesso. */
-      printf("Falha na abertura do arquivo de entrada de dados!\n");
-      printf("Programa encerrado...");
-      i = 1;
+  /* Inicializa plateia nova (gravação), fecha e reabre para leitura. */
+  /* Matriz inicial é mxn só com '-' no arquivo. */
+  int **Pplateia = inicializa_plateia(); /* Função que aloca e inicializa a matriz. */
+  for(i = 0 ; i < m ; i++){
+    for(j = 0 ; j < n ; j++){
+      fprintf(fp,"%c",Pplateia[i][j]);
     }
-    
-// testar se ele ta ou n vazio
-    
+    fprintf(fp,"%c",'\n');
   }
-  /* Fecha os arquivos se abertos */
-  if (!(fpin == NULL)) fclose(fpin);
+  free(Pplateia);
+  fclose(fp); /* Fecha arquivo: grava dados e disponibiliza para outro uso. */
+
+    if ((fp=fopen(nomeArq,"r"))==NULL){ /* Reabre para leitura da matriz inicial. */
+    falha_criacao();
+    }
+
+    printf("Primeiro acesso ao programa: arquivo de plateia criado");
+
+ }
+ /* Lê o arquivo e carrega os dados (atualiza) a matriz plateia. */
+ for(i = 0 ; i < m ; i++){
+   for(j = 0 ; j < n ; j++){
+   fscanf(fp,"%c",&p[i][j]);
+  }
+ fgetc(fp); /* Limpa caractere de final de linha. */
+ }
+
+ fclose(fp); /* Fecha o arquivo (garante a gravação da matriz inicial). */
 }
