@@ -14,27 +14,46 @@ void falha_criacao(){
 }
 
 /* Aloca dinamicamente a matriz, e retorna o ponteiro para ela */
-int** inicializa_plateia(){ 
+char** aloca_plateia(FILE fp){
   int m = 12, n = 10, i, j;
-  int **Pplateia = (int**)malloc(m*sizeof(int*));
+  char **Pplateia = (char**)malloc(m*sizeof(int*));
 
   if (Pplateia == NULL) falha_criacao();
 
   for(i = 0 ; i < m ; i++){
     /* Aloca memória para os elementos de uma linha. */
-    Pplateia[i] = (int*)malloc(n*sizeof(int));
+    Pplateia[i] = (char*)malloc(n*sizeof(int));
     if (Pplateia[i] == NULL) falha_criacao();
 
     /* Inicializa os elementos com - */
     for(j = 0 ; j < n ; j++) Pplateia[i][j]='-';
-    }
-
+  }
   /* Retorna ponteiro para a matriz. */
   return Pplateia;
+
+}
+/* Save */
+void gravaPlateia(char nomeArq[], char **p){
+  int i, j;
+  FILE *fp;
+  if ((fp=fopen(nomeArq,"w"))==NULL) falha_criacao();
+  else{
+  for(i = 0 ; i < 12 ; i++){
+    for(j = 0; j < 10; j++){
+      fprintf(fp,"%c",p[i][j]);
+    }
+    fprintf(fp,"%c",'\n');
+  }
+  }
 }
 
-/* Função que carrega o arquivo com os dados da platéia. Se o arquivo ainda
-não existir, o cria e o inicializa com todas as poltronas vazias ('-'). */
+void inicia_plateia(FILE fp, char nomeArq[]){
+  char **x;
+  x = aloca_plateia(fp);
+  gravaPlateia(nomeArq, x);
+}
+
+/* Função que carrega o arquivo com os dados da platéia. Se o arquivo ainda não existir, o cria e o inicializa com todas as poltronas vazias ('-'). */
 void carregaPlateia(char nomeArq[], char **p){
  /* nomeArq: arquivo onde a plateia será salvo */
  /* p: ponteiro para a matriz da plateia. */
@@ -47,13 +66,15 @@ void carregaPlateia(char nomeArq[], char **p){
 
   /* Inicializa plateia nova (gravação), fecha e reabre para leitura. */
   /* Matriz inicial é mxn só com '-' no arquivo. */
-  int **Pplateia = inicializa_plateia(); /* Função que aloca e inicializa a matriz. */
+  char **Pplateia = aloca_plateia(*fp); /* Função que aloca e inicializa a matriz. */
+    
   for(i = 0 ; i < m ; i++){
     for(j = 0 ; j < n ; j++){
       fprintf(fp,"%c",Pplateia[i][j]);
     }
     fprintf(fp,"%c",'\n');
   }
+    
   free(Pplateia); /* Libera a memória da plateia */
   fclose(fp); /* Fecha arquivo: grava dados e disponibiliza para outro uso. */
 
@@ -123,4 +144,12 @@ void menu(){
       printf("Valor deve estar entre 0 e 4.\n");
     }
   }
+}
+
+int main(){
+  FILE *fp;
+  char nomeArq[] = "vasco.txt";
+  fp = fopen(nomeArq,"r");
+  
+  inicia_plateia(*fp,nomeArq);
 }
