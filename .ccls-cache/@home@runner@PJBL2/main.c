@@ -3,19 +3,18 @@
 // git push --> manda pro git
 // git pull --> pega do git
 
-/* Os dados do arquivo (a plateia) devem ser recuperados (arquivo aberto, lido e fechado) 
-e colocados (durante a leitura do arquivo) na matriz alocada dinamicamente */
 
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Função que carrega o arquivo com os dados da platéia. Se o arquivo ainda não existir, o cria e o inicializa com todas as poltronas vazias ('-'). */
+/* Enecrra em caso de falha */
 void falha_criacao(){
   printf("Falha na criacao do arquivo de plateia!");
   exit(1);
 }
 
-int** inicializa_plateia(){ // Aloca dinamicamente a matriz, e retorna o ponteiro para ela
+/* Aloca dinamicamente a matriz, e retorna o ponteiro para ela */
+int** inicializa_plateia(){ 
   int m = 12, n = 10, i, j;
   int **Pplateia = (int**)malloc(m*sizeof(int*));
 
@@ -34,6 +33,8 @@ int** inicializa_plateia(){ // Aloca dinamicamente a matriz, e retorna o ponteir
   return Pplateia;
 }
 
+/* Função que carrega o arquivo com os dados da platéia. Se o arquivo ainda
+não existir, o cria e o inicializa com todas as poltronas vazias ('-'). */
 void carregaPlateia(char nomeArq[], char **p){
  /* nomeArq: arquivo onde a plateia será salvo */
  /* p: ponteiro para a matriz da plateia. */
@@ -53,7 +54,7 @@ void carregaPlateia(char nomeArq[], char **p){
     }
     fprintf(fp,"%c",'\n');
   }
-  free(Pplateia);
+  free(Pplateia); /* Libera a memória da plateia */
   fclose(fp); /* Fecha arquivo: grava dados e disponibiliza para outro uso. */
 
     if ((fp=fopen(nomeArq,"r"))==NULL){ /* Reabre para leitura da matriz inicial. */
@@ -72,4 +73,54 @@ void carregaPlateia(char nomeArq[], char **p){
  }
 
  fclose(fp); /* Fecha o arquivo (garante a gravação da matriz inicial). */
+}
+
+/* Menu de opções: */
+void menu(){
+  int i = 0, op;
+  char input[10]; 
+
+  printf("-----------------------\n");
+  printf("         MENU         \n");
+  printf("-----------------------\n");
+  printf("0 - Sair do programa\n");
+  printf("1 - Mostrar plateia\n");
+  printf("2 - Mostrar ocupacao\n");
+  printf("3 - Vender ingresso\n");
+  printf("4 - Cancelar ingresso (devolucao)\n");
+  printf("-----------------------\n");
+
+
+  while (i == 0) {
+    printf("Escolha uma opcao:  ");
+    scanf("%s", input);
+    op = atoi(input); // Transforma em int
+
+    if (op >= 0 && op <= 4) { // Entra no if so se for entre 0 e 4
+      switch (op) {
+        case 0:
+          i = 1;
+          break;
+        case 1:
+          i = 1;
+          break;
+        case 2:
+          i = 1;
+          break;
+        case 3:
+          i = 1;
+          break;
+        case 4:
+          i = 1;
+          break;
+        
+        default: // Se nao for inteiro
+          printf("Nao eh um inteiro! Digite um numero inteiro.\n");
+          break;
+      }
+    }
+    else { // Se nao for entre 0 e 4
+      printf("Valor deve estar entre 0 e 4.\n");
+    }
+  }
 }
