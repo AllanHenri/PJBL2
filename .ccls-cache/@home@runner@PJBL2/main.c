@@ -109,7 +109,7 @@ void carregaPlateia(char nomeArq[], char **p){
 
   /* Inicializa plateia nova (gravação), fecha e reabre para leitura. */
   /* Matriz inicial é mxn só com '-' no arquivo. */
-  char **Pplateia = aloca_plateia(*fp); /* Função que aloca e inicializa a matriz. */
+  char **Pplateia = aloca_plateia(); /* Função que aloca e inicializa a matriz. */
 
   for(i = 0 ; i < m ; i++){
     for(j = 0 ; j < n ; j++){
@@ -139,30 +139,23 @@ void carregaPlateia(char nomeArq[], char **p){
  fclose(fp); /* Fecha o arquivo (garante a gravação da matriz inicial). */
 }
 
+
 /* Mostrar Plateia */
 void mostra_plateia(char **p){
-    int m = 10, n = 12, i = 0 , j = 0;
+    int m = 10, n = 12, i=0 , j=0;
     printf("PLATEIA");
     printf("\n");
     printf("-----------------------------------------------------------");
     printf("\n");
-
-    for (i = 0 ; i < m; i++){
-       for(j = 0 ; j < n ; j++){
+      for (i=0 ; i < m; i++){
+        for(j = 0 ; j < n ; j++){
             if (p[i][j] == '-'){
                 int numero = 0;
                 numero = i * 10 + j + 1;
                 printf("%d", numero);
-            if (j == 11){
-                    printf("\n");
-            }
-            else{
-                printf(" ");
-            }
-            }else{
-            printf("   ");
-            }
-
+            if (j == 11) printf("\n");
+            else printf(" ");
+            } else printf("   ");
         }
     }
     printf("-----------------------------------------------------------");
@@ -271,7 +264,10 @@ int main(){
   FILE *fp;
   char nomeArq[] = "vasco.txt";
   char **p;
+
   p = aloca_plateia();
   gravaPlateia(nomeArq, p);
   menu(p);
+  return 0;
 }
+
