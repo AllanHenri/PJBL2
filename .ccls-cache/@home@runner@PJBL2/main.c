@@ -162,8 +162,8 @@ void mostra_plateia(char **p){
 }
 
 /* Vender ingresso */
-void vender_ingresso(char **p){
-  int poltronaInt, fileira, coluna, saida;
+void vender_ingresso(char nomeArq[], char **p){
+  int poltronaInt, fileira, coluna, saida, t;
   char tipo;
   //p = matriz plateia
 
@@ -172,8 +172,18 @@ void vender_ingresso(char **p){
   printf("-----------------------------------------------------------\n");
 
   printf("\nDigite o numero da poltrona <1..120> (zero encerra):  ");
+  
   poltronaInt = validacao_int();
+  // Verifica se o valor digitado esta entre 0 e 120
+  while (t == 0){ 
+  if (poltronaInt > 120 && poltronaInt < 0){
+    printf("Valor invalido. Digite um numero entre 0 e 120 (0 cancela)");
+    poltronaInt = validacao_int();
+  } else t =1;
+  }
 
+  if (poltronaInt == 0) gravaPlateia(nomeArq, p); // Cancela e grava
+  
   // ver se ela ta ocupada
   int m = 10, n = 12, i = 0 , j = 0, f = 0;
   while(f == 0){
@@ -186,8 +196,8 @@ void vender_ingresso(char **p){
             f = 1;
           } else {
           //ocupada
-          printf("\nPoltrona ocupada. Digite outro numero de poltrona <1..120>:  ");
-          poltronaInt = validacao_int();
+            printf("\nPoltrona ocupada. Digite outro numero de poltrona <1..120>:  ");
+            poltronaInt = validacao_int();
           }
         } 
       }
@@ -203,13 +213,14 @@ void vender_ingresso(char **p){
   scanf("%d",&saida);
   fflush(stdin);
   if (saida == 0){
+    gravaPlateia(nomeArq, p);
     printf("\n-----------------------------------------------------------\n");
     printf("FIM VENDA DE INGRESSOS");
-  } else vender_ingresso(p);
+  } else vender_ingresso(nomeArq, p);
 }
 
 /* Menu de opções: */
-void menu(char **p){
+void menu(char nomeArq[],char **p){
   int i = 0, op;
   char input[10];
 
@@ -242,7 +253,7 @@ void menu(char **p){
           i = 1;
           break;
         case 3:
-          vender_ingresso(p);
+          vender_ingresso(nomeArq,p);
           i = 1;
           break;
         case 4:
@@ -267,7 +278,7 @@ int main(){
 
   p = aloca_plateia();
   gravaPlateia(nomeArq, p);
-  menu(p);
+  menu(nomeArq, p);
   return 0;
 }
 
