@@ -136,7 +136,6 @@ void carregaPlateia(char nomeArq[], char **p){
  fclose(fp); /* Fecha o arquivo (garante a gravação da matriz inicial). */
 }
 
-
 /* Mostrar Plateia */
 void mostra_plateia(char **p){
     int m = 10, n = 12, i=0 , j=0;
@@ -152,7 +151,10 @@ void mostra_plateia(char **p){
                 printf("%d", numero);
             if (j == 11) printf("\n");
             else printf(" ");
-            } else printf("   ");
+            } else{
+                  if (j == 11) printf("   \n");
+                  else printf("   ");
+          } 
         }
     }
     printf("-----------------------------------------------------------");
@@ -160,7 +162,7 @@ void mostra_plateia(char **p){
 
 void mostra_ocupacao(char **p){
     int m = 10, n = 12, i=0 , j=0, meia=0, inteira =0;
-    printf("PLATEIA");
+    printf("\nPLATEIA");
     printf("\n");
     printf("-----------------------------------------------------------");
     printf("\n");
@@ -178,16 +180,16 @@ void mostra_ocupacao(char **p){
             else printf(" ");
         }
     }
-    printf("-----------------------------------------------------------");
-    printf("Poltronas meias vendidas....: %d.", meia);
-    printf("Poltronas inteiras vendidas....: %d.", inteira);
-    printf("-----------------------------------------------------------");
-    printf("FIM OCUPACAO");
+    printf("\n-----------------------------------------------------------");
+    printf("\nPoltronas meias vendidas....: %d.", meia);
+    printf("\nPoltronas inteiras vendidas....: %d.", inteira);
+    printf("\n-----------------------------------------------------------");
+    printf("\nFIM OCUPACAO\n");
 }
 
 /* Vender ingresso */
 void vender_ingresso(char nomeArq[], char **p){
-  int poltronaInt,saida, fileira, coluna, t;
+  int poltronaInt, fileira, coluna, t;
   char tipo;
   //p = matriz plateia
 
@@ -206,18 +208,17 @@ void vender_ingresso(char nomeArq[], char **p){
   } else t = 1;
   }
 
+  
   if (poltronaInt == 0) {
         gravaPlateia(nomeArq, p);// Cancela e grava
     } else {
-
-
   int coluna_m, linha_m;
-  coluna_m = (poltronaInt - 1) % 12;
-  linha_m = (poltronaInt - 1 - coluna_m) / 12;
-
+  
   // ver se ela ta ocupada
   int m = 10, n = 12, f = 0, fileira, coluna;
   while(f == 0){
+    coluna_m = (poltronaInt - 1) % 12;
+    linha_m = (poltronaInt - 1 - coluna_m) / 12;
           if (p[linha_m][coluna_m] == '-'){
             fileira = linha_m;
             coluna = coluna_m;
@@ -232,26 +233,32 @@ void vender_ingresso(char nomeArq[], char **p){
   tipo = validacao_char();
   p[linha_m][coluna_m] = tipo;
 
-    // ----> tem q dar um jeito de jogar essa informacao na matriz
-
+    
   if (tipo == 'm' || tipo == 'M') printf("\nPoltrona vendida: %d meia.",poltronaInt);
   if (tipo == 'i' || tipo == 'I') printf("\nPoltrona vendida: %d inteira.",poltronaInt);
-  printf("\n(Fileira %d, coluna %d.)",fileira,coluna);
-  printf("Vender outro ingresso? (0: nao; 1:sim)?");
+  printf("\n(Fileira %d, coluna %d.)",fileira+1,coluna+1);
+  }
+  int saida;
+  printf("\nVender outro ingresso? (0: nao; 1:sim)?   ");
 
   int g = 0;
     while (g == 0){
     saida = validacao_int();
     if (saida == 0){
+      g = 1;
       gravaPlateia(nomeArq, p);
       printf("\n-----------------------------------------------------------\n");
       printf("FIM VENDA DE INGRESSOS");
+      
+      
+    } else if (saida == 1){
       g = 1;
-    } else if (saida == 1) vender_ingresso(nomeArq, p);
-      else printf("Valor invalido. Vender outro ingresso? (0: nao; 1:sim)?");
+      vender_ingresso(nomeArq, p);
+    } 
+      else printf("Valor invalido. Vender outro ingresso? (0: nao; 1:sim)?   ");
     }
 }
-}
+
 
 void devolver_ingresso(char nomeArq[], char **p){
     int poltronaInt, fileira, coluna, saida, t;
@@ -264,9 +271,9 @@ void devolver_ingresso(char nomeArq[], char **p){
 
     while (t == 0){
   if (poltronaInt > 120 && poltronaInt < 0){
-    printf("Valor invalido. Digite um numero entre 0 e 120 (0 cancela)");
+    printf("\nValor invalido. Digite um numero entre 0 e 120 (0 cancela)   ");
     poltronaInt = validacao_int();
-  } else t =1;
+  } else t = 1;
   }
 
   if (poltronaInt == 0) {
@@ -275,13 +282,14 @@ void devolver_ingresso(char nomeArq[], char **p){
 
 
   int coluna_m, linha_m;
-  coluna_m = (poltronaInt - 1) % 12;
-  linha_m = (poltronaInt - 1 - coluna_m) / 12;
-
+  
   tipo = p[linha_m][coluna_m];
 
   int m = 10, n = 12, i = 0 , j = 0, f = 0;
   while(f == 0){
+    coluna_m = (poltronaInt - 1) % 12;
+    linha_m = (poltronaInt - 1 - coluna_m) / 12;
+
         if(p[linha_m][coluna_m] != '-'){
             fileira = linha_m+1;
             coluna = coluna_m+1;
@@ -296,8 +304,8 @@ void devolver_ingresso(char nomeArq[], char **p){
     if (tipo == 'm' || tipo == 'M') printf("\nPoltrona com venda cancelada: %d (meia).",poltronaInt);
   if (tipo == 'i' || tipo == 'I') printf("\nPoltrona com venda cancelada: %d (inteira).",poltronaInt);
     
-  printf("\n(Fileira %d, coluna %d.)",fileira,coluna);
-  printf("\nVender outro ingresso? (0: nao; 1:sim)?");
+  printf("\n(Fileira %d, coluna %d.)",fileira+1,coluna+1);
+  printf("\nCancelar outro ingresso? (0: nao; 1:sim)?  ");
   scanf("%d",&saida);
   fflush(stdin);
         }
@@ -309,14 +317,22 @@ void devolver_ingresso(char nomeArq[], char **p){
 
 }
 
+/* Função que libera memória alocada para a matriz de m linhas através de ponteiro para ponteiro. */
+void mat_free(char **p){
+int i, j, m = 10;
+for(i = 0 ; i < m ; i++){
+    free(p[i]); /* Libera memória alocada para a linha i. */
+  }
+free(p);
+}
+
 /* Menu de opções: */
-void menu(char nomeArq[],char **p){
+int menu(char nomeArq[],char **p){
   int i = 0, op;
   char input[10];
 
-  printf("-----------------------\n");
-  printf("         MENU         \n");
-  printf("-----------------------\n");
+  printf("\nMENU\n");
+  printf("\n-----------------------------------------------------------\n");
   printf("0 - Sair do programa\n");
   printf("1 - Mostrar plateia\n");
   printf("2 - Mostrar ocupacao\n");
@@ -333,14 +349,16 @@ void menu(char nomeArq[],char **p){
     if (op >= 0 && op <= 4) { // Entra no if so se for entre 0 e 4
       switch (op) {
         case 0:
-          i = 1;
+          printf("Fim do programa.");
+          mat_free(p);
+          i = 2;
           break;
         case 1:
           mostra_plateia(p);
           i = 1;
           break;
         case 2:
-            mostra_ocupacao(p);
+          mostra_ocupacao(p);
           i = 1;
           break;
         case 3:
@@ -361,22 +379,20 @@ void menu(char nomeArq[],char **p){
       printf("Valor deve estar entre 0 e 4.\n");
     }
   }
+  return i;
 }
-/* Função que libera memória alocada para a matriz de m linhas através de ponteiro para ponteiro. */
-void mat_free(char **p){
-int i, j, m = 10;
-for(i = 0 ; i < m ; i++){
-    free(p[i]); /* Libera memória alocada para a linha i. */
-  }
-free(p);
-}
+
 int main(){
   FILE *fp;
+  int x = 1;
   char nomeArq[] = "vasco.txt";
   char **p;
 
   p = aloca_plateia();
   gravaPlateia(nomeArq, p);
-  menu(nomeArq, p);
+  while (x == 1){
+    x = menu(nomeArq, p);
+  }
+
   return 0;
 }
