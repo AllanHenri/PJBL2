@@ -151,7 +151,7 @@ void mostra_plateia(char **p){
         for(j = 0 ; j < n ; j++){
             if (p[i][j] == '-'){
                 int numero = 0;
-                numero = i * 10 + j + 1;
+                numero = i * 12 + j + 1;
                 printf("%d", numero);
             if (j == 11) printf("\n");
             else printf(" ");
@@ -216,7 +216,7 @@ void vender_ingresso(char nomeArq[], char **p){
 
   int coluna_m, linha_m;
   coluna_m = (poltronaInt - 1) % 12;
-  linha_m = (poltronaInt - 1 - coluna_m) / 10;
+  linha_m = (poltronaInt - 1 - coluna_m) / 12;
 
   // ver se ela ta ocupada
   int m = 10, n = 12, f = 0, fileira, coluna;
@@ -274,7 +274,7 @@ void devolver_ingresso(char nomeArq[], char **p){
 
   int coluna_m, linha_m;
   coluna_m = (poltronaInt - 1) % 12;
-  linha_m = (poltronaInt - 1 - coluna_m) / 10;
+  linha_m = (poltronaInt - 1 - coluna_m) / 12;
 
   tipo = p[linha_m][coluna_m];
 
