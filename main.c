@@ -93,20 +93,6 @@ void gravaPlateia(char nomeArq[], char **p){
   }
 }
 
-carregar_plateia(FILE *fp, char **p){
-    int m= 10, n = 12;
-for(int i=0;i<m;i++){
-for(int j=0;j<n;j++){
-    fscanf(fp,"%c",&p[i][j]);
-        }
-    fgetc(fp); /* Limpa caractere de final de linha. */
-    }
-fclose(fp); /* Fecha o arquivo (garante a gravação da matriz inicial). */
-}
-
-
-
-
 /* Mostrar Plateia */
 void mostra_plateia(char **p){
     int m = 10, n = 12, i=0 , j=0;
@@ -116,18 +102,35 @@ void mostra_plateia(char **p){
     printf("\n");
       for (i=0 ; i < m; i++){
         for(j = 0 ; j < n ; j++){
-            if (p[i][j] == '-'){
-                int numero = 0;
+            int numero = 0;
                 numero = i * 12 + j + 1;
+            if (p[i][j] == '-'){
+
                 printf("%d", numero);
+
             if (j == 11) printf("\n");
-            else printf(" ");
-            } else{
+            else {
+                   if (numero<10){
+                    printf("   ");
+                   }else if(numero>=10 && numero<100){
+                   printf("  ");
+                   }else{
+                   printf(" ");
+                   }
+            }}else{
                   if (j == 11) printf("   \n");
-                  else printf("   ");
+                else {
+                   if (numero<10){
+                    printf("  ");
+                   }else if(numero>=10 && numero<100){
+                   printf("    ");
+                   }else{
+                   printf("      ");
+                   }
           }
         }
     }
+      }
     printf("-----------------------------------------------------------");
 }
 
