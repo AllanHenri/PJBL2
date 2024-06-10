@@ -360,10 +360,17 @@ int main(){
   int x = 1, m=10, n=12;
   char nomeArq[] = "vasco.txt";
   char **p;
-
   p = aloca_plateia();
+  if ((fp=fopen(nomeArq,"r"))==NULL) {
   gravaPlateia(nomeArq, p);
-
+  }else{
+  for(int i=0;i<m;i++){
+for(int j=0;j<n;j++){
+fscanf(fp,"%c",&p[i][j]);
+}
+fgetc(fp);
+  }
+  }
 while (x == 1){
     x = menu(nomeArq, p);
   }
